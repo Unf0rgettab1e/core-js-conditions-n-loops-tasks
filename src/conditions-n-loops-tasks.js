@@ -403,9 +403,7 @@ function sortByAsc(arr) {
  *  '012345', 3 => '024135' => '043215' => '031425'
  *  'qwerty', 3 => 'qetwry' => 'qtrewy' => 'qrwtey'
  */
-function shuffleChar(/* str, iterations */) {
-  throw new Error('Not implemented');
-}
+function shuffleChar(/* str, iterations */) {}
 
 /**
  * Returns the nearest largest integer consisting of the digits of the given positive integer.
@@ -424,10 +422,40 @@ function shuffleChar(/* str, iterations */) {
  * @param {number} number The source number
  * @returns {number} The nearest larger number, or original number if none exists.
  */
-function getNearestBigger(/* number */) {
-  throw new Error('Not implemented');
-}
+function getNearestBigger(number) {
+  let num = number;
+  const digits = [];
+  while (num) {
+    digits.unshift(num % 10);
+    num = Math.floor(num / 10);
+  }
+  let indexDesc = digits.length - 1;
+  for (indexDesc; indexDesc >= 1; indexDesc -= 1) {
+    if (digits[indexDesc] > digits[indexDesc - 1]) break;
+  }
+  if (!indexDesc) return number;
 
+  const swapDigit = digits[indexDesc - 1];
+  let rigthSmallest = indexDesc;
+
+  for (let j = indexDesc; j < digits.length; j += 1) {
+    if (digits[j] > swapDigit && digits[j] < digits[rigthSmallest])
+      rigthSmallest = j;
+  }
+
+  const temp = digits[rigthSmallest];
+  digits[rigthSmallest] = digits[indexDesc - 1];
+  digits[indexDesc - 1] = temp;
+
+  const resultLeft = [];
+  const resultRight = [];
+  for (let i = 0; i < digits.length; i += 1) {
+    if (i < indexDesc) resultLeft.push(digits[i]);
+    else resultRight.push(digits[i]);
+  }
+
+  return Number([...resultLeft, ...resultRight.sort((a, b) => a - b)].join(''));
+}
 module.exports = {
   isPositive,
   getMaxNumber,
